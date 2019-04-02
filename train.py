@@ -21,7 +21,7 @@ import ply_dataset as pd
 
 def main():
     parser = argparse.ArgumentParser(
-        description='AutoEncoder ShapeNet')
+        description='DGCNN')
     # parser.add_argument('--conv-layers', '-c', type=int, default=4)
     parser.add_argument('--batchsize', '-b', type=int, default=32)
     parser.add_argument('--dropout_ratio', type=float, default=0)
@@ -62,11 +62,15 @@ def main():
     except ImportError:
         pass
 
+    gpu = False
+    if device >= 0:
+        gpu = True
+    
     # Network
     print('Train DGCNN model... use_bn={} dropout={}'
           .format(use_bn, dropout_ratio))
     model = dgcnn.DGCNN(out_dim=out_dim, in_dim=in_dim, middle_dim=middle_dim, dropout_ratio=dropout_ratio, use_bn=use_bn,
-                          trans_lam1=trans_lam1, residual=residual, k=k)
+                          trans_lam1=trans_lam1, residual=residual, k=k, gpu=gpu)
 
     print("Dataset setting... num_point={}".format(num_point))
     # Dataset preparation
