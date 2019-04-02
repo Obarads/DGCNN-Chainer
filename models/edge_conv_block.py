@@ -11,7 +11,7 @@ def edge_conv(x,k):
     adj_matrix = pairwise_distance(point_cloud)
     nn_idx = knn(adj_matrix, k=k)
     edge_feature = get_edge_feature(point_cloud, nn_idx=nn_idx, k=k)
-    edge_feature = F.reshape(edge_feature,(x.shape[0],x.shape[2],k,x.shape[1]))
+    edge_feature = F.reshape(edge_feature,(x.shape[0],x.shape[2],x.shape[1],k))
     return edge_feature
 
 def pairwise_distance(point_cloud):
@@ -28,10 +28,7 @@ def pairwise_distance(point_cloud):
     if og_batch_size == 1:
         point_cloud = F.expand_dims(point_cloud, 0)
         
-    # Array dim is transformed to ver.tf array.
-    point_cloud_transpose = point_cloud
-    point_cloud = F.transpose(point_cloud,axes=[0,2,1])
-
+    point_cloud_transpose = F.transpose(point_cloud,axes=[0,2,1])
     point_cloud_inner = F.matmul(point_cloud,point_cloud_transpose)
     point_cloud_inner = -2*point_cloud_inner
     point_cloud_square = F.sum(F.square(point_cloud), axis=-1, keepdims=True)
@@ -40,11 +37,11 @@ def pairwise_distance(point_cloud):
 
 def knn(x, k=20, axis=None):
     x_arr = x.array
-    if x.data.dtype == cp.float64:
+    if x.data.dtype == cp.float64 or x.data.dtype == cp.float32:
         res = cp.argpartition(x_arr,kth=k)
-    elif x.data.dtype == np.float64:
+    elif x.data.dtype == np.float64 or x.data.dtype == np.float32:
         res = np.argpartition(x_arr,kth=k)
-    return res[:,:,0:2]
+    return res[:,:,0:k]
 
 def get_edge_feature(point_cloud, nn_idx, k=20):
     """Construct edge feature for each point

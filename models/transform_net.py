@@ -5,7 +5,7 @@ from chainer import functions
 from chainer import initializers
 from chainer import links
 
-from conv_block import ConvBlock
+from .conv_block import ConvBlock
 
 
 class TransformModule(chainer.Chain):
