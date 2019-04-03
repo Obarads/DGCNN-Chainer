@@ -11,7 +11,7 @@ def edge_conv(x,k,gpu=False):
     adj_matrix = pairwise_distance(point_cloud)
     nn_idx = knn(adj_matrix, k=k, gpu=gpu)
     edge_feature = get_edge_feature(point_cloud, nn_idx=nn_idx, k=k,gpu=gpu)
-    edge_feature = F.reshape(edge_feature,(x.shape[0],x.shape[1],x.shape[2],k))
+    edge_feature = F.reshape(edge_feature,(x.shape[0],edge_feature.shape[3],x.shape[2],k))
     return edge_feature
 
 def pairwise_distance(point_cloud):

@@ -30,6 +30,7 @@ class DGCNN(chainer.Chain):
                  residual=False, k=20, gpu=False):
         super(DGCNN, self).__init__()
         with self.init_scope():
+            in_dim = in_dim*2
 
             self.input_transform_net = TransformNet(
                 k=in_dim, use_bn=use_bn, residual=residual)
@@ -52,7 +53,7 @@ class DGCNN(chainer.Chain):
                 512, 256, use_bn=use_bn, dropout_ratio=dropout_ratio,)
             self.fc8 = links.Linear(256, out_dim)
 
-        self.in_dim = in_dim
+        self.in_dim = in_dim*2
         self.trans_lam1 = trans_lam1
         self.compute_accuracy = compute_accuracy
         self.k = k
@@ -81,6 +82,7 @@ class DGCNN(chainer.Chain):
         k = self.k
         gpu = self.gpu
         edge_feature = ec.edge_conv(x,k,gpu)
+        print(edge_feature.shape)
         h, t1 = self.input_transform_net(edge_feature)
 
         h = ec.edge_conv(h,k,gpu)
