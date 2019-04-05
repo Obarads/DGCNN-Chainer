@@ -25,7 +25,7 @@ class TransformModule(chainer.Chain):
         super(TransformModule, self).__init__()
         initial_bias = numpy.identity(k, dtype=numpy.float32).ravel()
         with self.init_scope():
-            self.conv_block1 = ConvBlock(k, 64, ksize=1, use_bn=use_bn,
+            self.conv_block1 = ConvBlock(k*2, 64, ksize=1, use_bn=use_bn,
                                          residual=residual)
             self.conv_block2 = ConvBlock(64, 128, ksize=1, use_bn=use_bn,
                                          residual=residual)
@@ -53,6 +53,9 @@ class TransformModule(chainer.Chain):
         # K - feature degree (this is 3 for xyz input, 64 for middle layer)
         h = self.conv_block1(x)
         h = self.conv_block2(h)
+
+        h = functions.max(h,axis=2,keepdims=True)
+
         h = self.conv_block3(h)
         h = functions.max_pooling_2d(h, ksize=h.shape[2:])
         # h: (minibatch, K, 1, 1)
@@ -84,12 +87,12 @@ class TransformNet(chainer.Chain):
             self.trans_module = TransformModule(
                 k=k, use_bn=use_bn, residual=residual)
 
-    def __call__(self, x):
-        t = self.trans_module(x)
-        # t: (minibatch, K, K)
-        # x: (minibatch, K, N, 1)
-        # h: (minibatch, K, N)
-        # K = in_dim
+    def __call__(self, edge_feature, x):
+        t = self.trans_module(edge_feature)
+        # t: (minibatch, dim, dim)
+        # edge_feature: (minibatch, dim, N, K)
+        # h: (minibatch, dim, N)
+        # K = number of neighbor
         h = functions.matmul(t, x[:, :, :, 0])
         bs, k, n = h.shape
         h = functions.reshape(h, (bs, k, n, 1))

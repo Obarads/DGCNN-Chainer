@@ -51,7 +51,6 @@ def main():
     trans_lam1 = 0.001
     out_dim = 40
     in_dim = 3
-    middle_dim = 64
 
     try:
         os.makedirs(out_dir, exist_ok=True)
@@ -69,7 +68,7 @@ def main():
     # Network
     print('Train DGCNN model... use_bn={} dropout={}'
           .format(use_bn, dropout_ratio))
-    model = dgcnn.DGCNN(out_dim=out_dim, in_dim=in_dim, middle_dim=middle_dim, dropout_ratio=dropout_ratio, use_bn=use_bn,
+    model = dgcnn.DGCNN(out_dim=out_dim, in_dim=in_dim, dropout_ratio=dropout_ratio, use_bn=use_bn,
                           trans_lam1=trans_lam1, residual=residual, k=k, gpu=gpu)
 
     print("Dataset setting... num_point={}".format(num_point))
@@ -112,9 +111,9 @@ def main():
     trainer.extend(E.Evaluator(val_iter, model,
                                 converter=converter, device=device))
     trainer.extend(E.PrintReport(
-        ['epoch', 'main/loss','main/dist_loss', 'main/trans_loss1',
-            'validation/main/loss','validation/main/dist_loss',
-            'validation/main/trans_loss1','lr', 'elapsed_time']))
+        ['epoch', 'main/loss','main/accuracy','main/cls_loss', 'main/trans_loss',
+            'validation/main/loss','validation/main/accuracy','validation/main/cls_loss',
+            'validation/main/trans_loss','lr', 'elapsed_time']))
     trainer.extend(E.snapshot(), trigger=(epoch, 'epoch'))
     trainer.extend(E.LogReport())
     trainer.extend(E.ProgressBar(update_interval=10))
