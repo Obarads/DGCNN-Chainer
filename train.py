@@ -23,12 +23,12 @@ def main():
     parser = argparse.ArgumentParser(
         description='DGCNN')
     # parser.add_argument('--conv-layers', '-c', type=int, default=4)
+    parser.add_argument('--gpu', '-g', type=int, default=-1)
+    parser.add_argument('--num_point', '-n', type=int, default=1024)
+    parser.add_argument('--epoch', '-e', type=int, default=250)
     parser.add_argument('--batchsize', '-b', type=int, default=32)
     parser.add_argument('--dropout_ratio', type=float, default=0)
-    parser.add_argument('--num_point', '-n', type=int, default=1024)
-    parser.add_argument('--gpu', '-g', type=int, default=-1)
     parser.add_argument('--out', '-o', type=str, default='result')
-    parser.add_argument('--epoch', '-e', type=int, default=250)
     parser.add_argument('--model_filename','-m', type=str, default='model.npz')
     parser.add_argument('--resume','-r', type=str, default='')
     parser.add_argument('--use_bn', type=strtobool, default='true')
@@ -130,7 +130,6 @@ def main():
     #     os.path.join(out_dir, args.model_filename), protocol=protocol)
     serializers.save_npz(
         os.path.join(out_dir, model_filename), model)
-
 
 if __name__ == '__main__':
     main()

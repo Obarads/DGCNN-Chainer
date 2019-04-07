@@ -7,11 +7,11 @@ import cupy as cp
 import copy 
 
 def edge_conv(x,k,gpu=False):
-    point_cloud = F.reshape(x,(x.shape[0],x.shape[2],x.shape[1]))
+    point_cloud=F.transpose(x,(0,2,1,3))
     adj_matrix = pairwise_distance(point_cloud)
     nn_idx = knn(adj_matrix, k=k, gpu=gpu)
     edge_feature = get_edge_feature(point_cloud, nn_idx=nn_idx, k=k,gpu=gpu)
-    edge_feature = F.reshape(edge_feature,(x.shape[0],edge_feature.shape[3],x.shape[2],k))
+    edge_feature = F.transpose(edge_feature,(0,3,1,2))
     return edge_feature
 
 def pairwise_distance(point_cloud):
@@ -44,9 +44,9 @@ def knn(x, k=20, axis=None, gpu=False):
         res = np.argpartition(x_arr,kth=k)
     """
     if gpu:
-        res = cp.argpartition(x_arr,kth=k)
+        res = cp.argpartition(x_arr,kth=k-1)
     else:
-        res = np.argpartition(x_arr,kth=k)
+        res = np.argpartition(x_arr,kth=k-1)
 
     return res[:,:,0:k]
 
@@ -89,3 +89,26 @@ def get_edge_feature(point_cloud, nn_idx, k=20, gpu=False):
     edge_feature = F.concat(
         [point_cloud_central, point_cloud_neighbors-point_cloud_central], axis=-1)
     return edge_feature
+  
+if __name__ == '__main__':
+    np.random.seed(0)
+    point_cloud = np.random.rand(4,80,3)
+    point_cloud = np.array([
+        [
+            [0,4,6],
+            [1,1,2],
+            [2,4,4],
+            [3,6,7],
+            [0,9,0],
+        ],
+        [
+            [0,9,0],
+            [0,4,6],
+            [2,4,4],
+            [1,1,2],
+            [3,6,7],
+        ]
+    ],dtype=float)
+    point_cloud=F.transpose(point_cloud,(0,2,1))
+    chainer_res = edge_conv(point_cloud,3)
+    print(chainer_res)
