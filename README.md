@@ -9,7 +9,7 @@ Furthermore, version that I tested operation is described on comments.
 # chainer version 5.3.0
 pip install chainer
 # cupy-cuda100 version 5.4.0
-pip install cupy-cuda92
+pip install cupy-cuda100
 ```
 Also, some extension library is used in some of the code,
 ```

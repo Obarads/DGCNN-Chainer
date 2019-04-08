@@ -38,6 +38,9 @@ class PlyDataset(chainer.dataset.DatasetMixin):
             rotated_data = provider.rotate_point_cloud(
                 self.data[i:i + 1, :, :])
             jittered_data = provider.jitter_point_cloud(rotated_data)
+            jittered_data = provider.random_scale_point_cloud(jittered_data)
+            jittered_data = provider.rotate_perturbation_point_cloud(jittered_data)
+            jittered_data = provider.shift_point_cloud(jittered_data)
             point_data = jittered_data[0]
         else:
             point_data = self.data[i]
