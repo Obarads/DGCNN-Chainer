@@ -29,8 +29,9 @@ python train.py -g 0
 
 ## Result
 2019/04/10(YYYY/MM/DD), this implementation is incomplete.
+
 | main/loss | main/accuracy | validation/main/loss | validation/main/accuracy | elapsed_time |
-|-|-|-|-|-|
+|---|---|---|---|---|
 | 0.0147 | 0.9948 | 0.7025 | 0.8906 | 116486.35 |
 
 # Reference
