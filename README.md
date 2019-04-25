@@ -28,11 +28,19 @@ python train.py -g 0
 ```
 
 ## Result
+<<<<<<< HEAD
 2019/04/10(YYYY/MM/DD), this implementation is incomplete. Chainer=our implementation, TensorFlow=author implementation.
 |framework | main/loss | main/accuracy | validation/main/loss | validation/main/accuracy | elapsed_time |
 |-|-|-|-|-|-|
 | Chainer | 0.0147 | 0.9948 | 0.7025 | 0.8906 | 116486.35(s) ≒ 32.36(h) |
 |TensorFlow| ??? | 0.9741 | ???? | 0.9111 | ???? |
+=======
+2019/04/10(YYYY/MM/DD), this implementation is incomplete.
+
+| main/loss | main/accuracy | validation/main/loss | validation/main/accuracy | elapsed_time |
+|---|---|---|---|---|
+| 0.0147 | 0.9948 | 0.7025 | 0.8906 | 116486.35 |
+>>>>>>> master
 
 # Reference
 1. [Yue Wang, Yongbin Sun, Ziwei Liu, Sanjay E. Sarma, Michael M. Bronstein, Justin M. Solomon. Dynamic Graph CNN for Learning on Point Clouds. 2018.](https://arxiv.org/abs/1801.07829)
