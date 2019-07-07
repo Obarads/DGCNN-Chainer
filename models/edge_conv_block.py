@@ -43,6 +43,7 @@ def knn(x, k=20, axis=None, gpu=False):
     elif x.data.dtype == np.float64 or x.data.dtype == np.float32:
         res = np.argpartition(x_arr,kth=k)
     """
+    # ここ、近い順に並ぶようにしろ
     if gpu:
         res = cp.argpartition(x_arr,kth=k-1)
     else:
