@@ -1,4 +1,4 @@
-# Dynamic Graph CNN-Chainer
+# Dynamic Graph CNN using chainer
 ## Introduce
 This repository is an implementation of DGCNN[1] in Chainer.
 
